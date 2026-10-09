@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ramses Contreras · AI Engineer</title>
+<meta name="description" content="Ramses Contreras: Madrid-based engineer who builds AI things that actually leave the demo stage. RAG, agents, voice AI, and 2.5 years shipping for Fortune 500 clients at Celonis.">
+<meta property="og:title" content="Ramses Contreras · AI Engineer">
+<meta property="og:description" content="Engineer who builds AI things that actually leave the demo stage. Madrid.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ramsescs.github.io/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%231c1b17'/><text x='6' y='23' font-family='monospace' font-size='18' fill='%23f2efe6'>r_</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f2efe6;
+    --paper-2: #ebe7db;
+    --ink: #1c1b17;
+    --muted: #6d695d;
+    --rule: #d6d0bf;
+    --accent: #2a44c9;
+    --accent-soft: rgba(42, 68, 201, .09);
+    --mark: #f6dc6b;
+    --mono: "Martian Mono", ui-monospace, monospace;
+    --serif: "Newsreader", Georgia, serif;
+    --gutter: 13rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #13120f;
+      --paper-2: #1b1a16;
+      --ink: #ebe6d8;
+      --muted: #9b9584;
+      --rule: #2f2c25;
+      --accent: #93a6ff;
+      --accent-soft: rgba(147, 166, 255, .1);
+      --mark: #5b4d12;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, var(--rule) 1px, transparent 0),
+      linear-gradient(180deg, var(--paper-2), var(--paper) 40rem);
+    background-size: 22px 22px, 100% 100%;
+    background-attachment: fixed;
+    font-family: var(--serif);
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--mark); color: var(--ink); }
+  a { color: var(--accent); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .35s ease; }
+  a:hover { background-size: 100% 1px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .sheet { max-width: 60rem; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  /* running head / foot, like a real man page */
+  .runhead, .runfoot {
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-family: var(--mono); font-size: .72rem; font-variation-settings: "wdth" 87;
+    letter-spacing: .04em; color: var(--muted);
+    padding: 1.25rem 0; border-bottom: 1px solid var(--rule);
+  }
+  .runfoot { border-bottom: 0; border-top: 1px solid var(--rule); margin-top: 3rem; }
+  .runhead .mid, .runfoot .mid { text-align: center; }
+
+  /* sections */
+  .sec { display: grid; grid-template-columns: var(--gutter) 1fr; gap: 0 2rem; padding: 2rem 0; border-bottom: 1px dashed var(--rule); }
+  .sec:last-of-type { border-bottom: 0; }
+  .sec > h2 {
+    margin: .35rem 0 0; font-family: var(--mono); font-weight: 600; font-size: .8rem;
+    letter-spacing: .12em; text-transform: uppercase; font-variation-settings: "wdth" 100;
+  }
+  .sec > h2::before { content: "§ "; color: var(--accent); }
+  .sec > .body > :first-child { margin-top: 0; }
+  .sec > .body > :last-child { margin-bottom: 0; }
+  p { margin: 0 0 1rem; }
+
+  /* hero */
+  .hero { padding-top: 3.5rem; }
+  .hero h1 {
+    margin: 0 0 .5rem; font-weight: 400; font-size: clamp(3rem, 9vw, 6.25rem); line-height: .95;
+    letter-spacing: -.035em; font-variation-settings: "opsz" 72;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .whatis { font-family: var(--mono); font-size: .92rem; font-variation-settings: "wdth" 87; margin: 1.25rem 0 0; }
+  .whatis b { font-weight: 600; }
+  .caret { display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em; background: var(--accent); margin-left: .15em; animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .meta { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-family: var(--mono); font-size: .78rem; font-variation-settings: "wdth" 87; color: var(--muted); }
+  .meta a { color: var(--ink); }
+  .meta a::before { content: "→ "; color: var(--accent); }
+
+  /* synopsis */
+  .syn {
+    margin: 0; font-family: var(--mono); font-size: .86rem; font-variation-settings: "wdth" 87; line-height: 1.9;
+    padding: 1rem 1.25rem 1rem calc(1.25rem + 7ch); text-indent: -7ch; background: var(--accent-soft); border-left: 3px solid var(--accent);
+  }
+  .syn > span { white-space: nowrap; }
+  .syn b { font-weight: 700; }
+  .syn i { font-style: normal; color: var(--accent); }
+
+  .lede { font-size: 1.35rem; line-height: 1.5; font-variation-settings: "opsz" 36; }
+  .hl { background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%); padding: 0 .1em; }
+
+  /* entries */
+  .entry { margin-bottom: 2rem; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 1rem; }
+  .entry h3 { margin: 0; font-size: 1.45rem; font-weight: 500; letter-spacing: -.01em; font-variation-settings: "opsz" 36; }
+  .entry h3 small { font-family: var(--mono); font-size: .7rem; font-weight: 400; color: var(--muted); letter-spacing: .04em; font-variation-settings: "wdth" 87; margin-left: .5rem; }
+  .role { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; margin: 1rem 0 .35rem; font-style: italic; }
+  .date { font-family: var(--mono); font-style: normal; font-size: .74rem; color: var(--muted); font-variation-settings: "wdth" 87; white-space: nowrap; }
+  ul.dash { list-style: none; margin: 0; padding: 0; }
+  ul.dash li { position: relative; padding-left: 1.5rem; margin-bottom: .45rem; transition: transform .25s ease; }
+  ul.dash li::before { content: "–"; position: absolute; left: 0; color: var(--accent); font-family: var(--mono); font-size: .9rem; transition: transform .25s ease; }
+  ul.dash li:hover::before { transform: translateX(4px); }
+  .num { font-family: var(--mono); font-size: .86em; font-weight: 600; font-variation-settings: "wdth" 87; }
+
+  .proj { margin-bottom: 1.75rem; }
+  .proj h3 { margin: 0 0 .25rem; font-family: var(--mono); font-size: .98rem; font-weight: 600; font-variation-settings: "wdth" 87; }
+  .proj h3 .tag { font-weight: 400; color: var(--muted); font-size: .72rem; margin-left: .5rem; }
+  .proj p { margin-bottom: .4rem; }
+  .stack { font-family: var(--mono); font-size: .7rem; font-variation-settings: "wdth" 87; color: var(--muted); letter-spacing: .02em; }
+
+  dl.opts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .6rem 1.5rem; }
+  dl.opts dt { font-family: var(--mono); font-size: .86rem; font-weight: 600; font-variation-settings: "wdth" 87; padding-top: .18rem; white-space: nowrap; }
+  dl.opts dd { margin: 0; }
+
+  .env { font-family: var(--mono); font-size: .86rem; font-variation-settings: "wdth" 87; line-height: 2; }
+  .env span { color: var(--muted); }
+
+  .seealso { font-family: var(--mono); font-size: .92rem; font-variation-settings: "wdth" 87; display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
+
+  /* load choreography: one staggered reveal, then nothing gets in your way */
+  .rise { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms + 100ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .hero h1 .ln { display: block; overflow: hidden; }
+  .hero h1 .ln > span { display: inline-block; animation: up 1s cubic-bezier(.2, .8, .1, 1) both; }
+  .hero h1 .ln:nth-child(2) > span { animation-delay: .12s; }
+  @keyframes up { from { transform: translateY(105%); } to { transform: none; } }
+
+  @media (max-width: 720px) {
+    body { font-size: 1.0625rem; }
+    .sheet { padding: 0 1rem 3rem; }
+    .sec { grid-template-columns: 1fr; padding: 1.5rem 0; }
+    .sec > h2 { margin-bottom: .9rem; }
+    .runhead .mid, .runfoot .mid { display: none; }
+    .lede { font-size: 1.2rem; }
+    .syn { font-size: .74rem; padding-right: .75rem; }
+    dl.opts { grid-template-columns: 1fr; gap: .1rem; }
+    dl.opts dd { margin-bottom: .7rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="runhead rise" style="--i:0">
+    <span>RAMSES(1)</span><span class="mid">Field Manual · Madrid</span><span>RAMSES(1)</span>
+  </header>
+
+  <main>
+    <section class="sec hero">
+      <h2 class="rise" style="--i:1">Name</h2>
+      <div class="body">
+        <h1><span class="ln"><span>Ramses</span></span><span class="ln"><span><em>Contreras</em></span></span></h1>
+        <p class="whatis rise" style="--i:3"><b>ramses</b> — engineer who builds AI things that actually leave the demo stage<span class="caret" aria-hidden="true"></span></p>
+        <div class="meta rise" style="--i:4">
+          <span>Madrid, ES</span>
+          <a href="mailto:ramses.contreras7@gmail.com">ramses.contreras7@gmail.com</a>
+          <a href="https://github.com/ramsescs">github</a>
+          <a href="https://www.linkedin.com/in/ramses-contreras-sulbaran">linkedin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec rise" style="--i:5">
+      <h2>Synopsis</h2>
+      <div class="body">
+        <p class="syn"><b>ramses</b> <span>[<i>--discover</i>]</span> <span>[<i>--prototype</i>]</span> <span>[<i>--ship-to-production</i>]</span> <span>[<i>--explain-it-to-the-vp</i>]</span> <span>[<i>--lang</i> es|en|it]</span></p>
+      </div>
+    </section>
+
+    <section class="sec rise" style="--i:6">
+      <h2>Description</h2>
+      <div class="body">
+        <p class="lede">Spent <span class="hl">2.5 years at Celonis</span> taking AI and automation from discovery to production for Fortune 500 accounts: RAG pipelines, predictive models and FastAPI services, across 20+ enterprise deployments in EMEA and North America.</p>
+        <p>Has a degree in Business and is finishing one in Computer Science, so he can talk to the customers <em>and</em> the code. Lately obsessed with <strong>voice agents</strong>: tools, guardrails, telephony, the whole thing.</p>
+      </div>
+    </section>
+
+    <section class="sec rise" style="--i:7">
+      <h2>Status</h2>
+      <div class="body">
+        <ul class="dash">
+          <li>Finishing a B.Sc. in Computer Science (AI track) at UC3M, due <span class="num">Dec 2026</span>.</li>
+          <li>Thesis: a phone triage agent for Spain's public health system, built on ElevenLabs Agents.</li>
+          <li>Looking for applied AI and forward-deployed engineering roles.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec" id="experience">
+      <h2>Experience</h2>
+      <div class="body">
+        <article class="entry">
+          <div class="entry-head"><h3>Celonis <small>MADRID</small></h3><span class="date">2023 – 2025</span></div>
+          <div class="role"><span>Associate Process Intelligence Consultant</span><span class="date">Sep 2024 – Oct 2025</span></div>
+          <ul class="dash">
+            <li>Defined the MVP for a predictive shipment planner and restocking optimizer for a world-leading logistics client. Piloted it across <span class="num">3</span> warehouses and <span class="num">1M+</span> shipments, and won Celonis' <strong>Innovation of the Quarter</strong> award.</li>
+            <li>Turned an internal migration tool into a product: rebuilt the ETL automation, ran <span class="num">~10</span> customer pilots, then rolled it out company-wide. Migrations went from several weeks to <span class="num">~3 days</span>.</li>
+            <li>Delivered end-to-end implementations for enterprise clients across EMEA and North America.</li>
+            <li>Ran AI enablement programs for <span class="num">30+</span> customers and partners with the Academy team.</li>
+          </ul>
+          <div class="role"><span>Data Scientist, Internal AI &amp; Automation</span><span class="date">Jul 2023 – Aug 2024</span></div>
+          <ul class="dash">
+            <li>Shipped a RAG search assistant on Azure for the sales engineering team. Finding the right customer story went from hours to seconds.</li>
+            <li>Rebuilt the demo data generator for object-centric process mining, saving <span class="num">2+ h</span> per demo.</li>
+            <li>Built a customer-facing app with custom FastAPI endpoints to monitor large-scale automation flows in real time.</li>
+          </ul>
+        </article>
+        <article class="entry">
+          <div class="entry-head"><h3>180 Degrees Consulting <small>MADRID</small></h3><span class="date">2021</span></div>
+          <div class="role"><span>Strategic Consultant Intern</span><span class="date">Jan – May 2021</span></div>
+          <ul class="dash">
+            <li>Delivered an e-learning platform and a new Google Ads revenue stream for a Nigerian NGO. Named Best Project of the Cycle.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="sec" id="projects">
+      <h2>Projects</h2>
+      <div class="body">
+        <article class="proj">
+          <h3><a href="https://github.com/ramsescs/sns-voice-agent-elevenlabs">sns-voice-agent</a><span class="tag">thesis · in progress</span></h3>
+          <p>A phone triage agent for Spain's public health system. The SET acuity protocol runs as a deterministic FastAPI tool, so the triage level is assigned in code, not by the model, and guardrails stop the agent from overriding an escalation. Built to handle Spain's co-official languages, with a slower, simpler mode for older callers.</p>
+          <div class="stack">ElevenLabs Agents · Python · FastAPI</div>
+        </article>
+        <article class="proj">
+          <h3>voice-agent-for-logistics<span class="tag">hackathon · apr 2026</span></h3>
+          <p>A multi-step autonomous voice agent with custom tools, plus a React/TypeScript dashboard where operators trace its reasoning and performance in real time.</p>
+          <div class="stack">Claude Code · Python · FastAPI · HappyRobot · React · TypeScript</div>
+        </article>
+        <article class="proj">
+          <h3><a href="https://github.com/ramsescs/Timekeeper">Timekeeper</a><span class="tag">side project</span></h3>
+          <p>A macOS menu bar app that tracks time per activity and, when a break is due, blurs every screen until you take it.</p>
+          <div class="stack">Swift · macOS</div>
+        </article>
+        <article class="proj">
+          <h3><a href="https://github.com/ramsescs/job-search-agent">job-search-agent</a><span class="tag">fork of career-ops</span></h3>
+          <p>An extended fork of career-ops: Claude Code running (most of) his job hunt.</p>
+          <div class="stack">Claude Code · JavaScript</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>Options</h2>
+      <div class="body">
+        <dl class="opts">
+          <dt>--ai</dt><dd>LLM APIs (Anthropic, OpenAI, Gemini), RAG (embeddings, Chroma), agents and tool use, agent observability, ElevenLabs, Claude Code</dd>
+          <dt>--code</dt><dd>Python (Pandas, NumPy, scikit-learn, FastAPI), React/TypeScript, Java, SQL (Vertica, PostgreSQL)</dd>
+          <dt>--ops</dt><dd>Azure, Docker, Git, GitHub Actions</dd>
+          <dt>--product</dt><dd>Customer discovery, MVP definition, user flows, accessibility, BPMN and process modeling</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>Education</h2>
+      <div class="body">
+        <article class="entry">
+          <div class="entry-head"><h3>Universidad Carlos III de Madrid</h3></div>
+          <div class="role"><span>B.Sc. Computer Science, AI specialization</span><span class="date">exp. Dec 2026</span></div>
+          <div class="role"><span>B.Sc. Business Administration · 8.63/10, top 5%</span><span class="date">Jul 2024</span></div>
+        </article>
+        <ul class="dash">
+          <li>Visiting student at USC <span class="num">(3.79/4)</span>, Università Bocconi <span class="num">(27/30)</span> and UC Santa Cruz <span class="num">(3.83/4)</span>.</li>
+          <li>Beca Excelencia, Comunidad de Madrid: three years running.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>Environment</h2>
+      <div class="body env">
+        TZ=Europe/Madrid<br>
+        LANG=es_ES <span># native</span><br>
+        LANG=en_US <span># native</span><br>
+        LANG=it_IT <span># C1</span>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>Bugs</h2>
+      <div class="body">
+        <ul class="dash">
+          <li>Built an app that forces him to take breaks. Do not ask about the snooze button.</li>
+          <li>Sat on the 7-person committee that ran <span class="num">40+</span> company events on a <span class="num">€72K</span> budget, including two 300-person parties and two ski trips. Will plan your offsite if asked.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>See also</h2>
+      <div class="body seealso">
+        <a href="mailto:ramses.contreras7@gmail.com">mail(1)</a>
+        <a href="https://github.com/ramsescs">github(1)</a>
+        <a href="https://www.linkedin.com/in/ramses-contreras-sulbaran">linkedin(1)</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="runfoot">
+    <span>ramsescs.github.io</span><span class="mid">October 2026</span><span>RAMSES(1)</span>
+  </footer>
+</div>
+</body>
+</html>

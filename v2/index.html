@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ramses Contreras · AI Engineer</title>
+<meta name="description" content="Ramses Contreras: Madrid-based engineer who builds AI things that actually leave the demo stage. RAG, agents, voice AI, and 2.5 years shipping for Fortune 500 clients at Celonis.">
+<meta property="og:title" content="Ramses Contreras · AI Engineer">
+<meta property="og:description" content="Engineer who builds AI things that actually leave the demo stage. Madrid.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ramsescs.github.io/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231b1a17'/><text x='5' y='22' font-family='monospace' font-weight='700' font-size='16' fill='%23f28c38'>{r}</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --desk: #0f0e0c;
+    --bg: #1b1a17;
+    --bg-side: #161512;
+    --bg-bar: #24221d;
+    --bg-hover: rgba(242, 140, 56, .06);
+    --border: #2e2b25;
+    --fg: #e8dcc0;
+    --muted: #8f8573;
+    --ln: #544e43;
+    --orange: #f28c38;
+    --red: #f2594b;
+    --yellow: #f5c04e;
+    --green: #b6c75c;
+    --aqua: #7fc4a4;
+    --blue: #84aec5;
+    --pink: #e88aa2;
+    --mono: "Victor Mono", ui-monospace, monospace;
+    --gut: 3.4rem;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; color: var(--fg); font-family: var(--mono); font-size: 14.5px; line-height: 1.75;
+    background-color: var(--desk);
+    background-image:
+      radial-gradient(60rem 40rem at 15% -10%, rgba(242, 140, 56, .13), transparent 60%),
+      radial-gradient(50rem 40rem at 110% 110%, rgba(127, 196, 164, .08), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 4px);
+    -webkit-font-smoothing: antialiased;
+    padding: 2rem; overflow: hidden;
+  }
+  ::selection { background: rgba(242, 140, 56, .35); }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, .scroll:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+
+  /* ---------- window ---------- */
+  .win {
+    height: calc(100vh - 4rem); max-width: 84rem; margin: 0 auto;
+    display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: 15rem 1fr;
+    grid-template-areas: "title title" "side main" "status status";
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 40px 120px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .02) inset;
+    animation: winIn .7s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  @keyframes winIn { from { opacity: 0; transform: translateY(18px) scale(.985); } }
+
+  .title { grid-area: title; display: flex; align-items: center; gap: 1rem; padding: .55rem 1rem; background: var(--bg-side); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+  .lights { display: flex; gap: 7px; }
+  .lights i { width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+  .lights i:nth-child(2) { background: var(--yellow); }
+  .lights i:nth-child(3) { background: var(--green); }
+  .title .t { flex: 1; text-align: center; }
+  .title .t b { color: var(--fg); font-weight: 500; }
+
+  /* ---------- explorer ---------- */
+  .side { grid-area: side; background: var(--bg-side); border-right: 1px solid var(--border); padding: .9rem 0; font-size: 13px; overflow-y: auto; }
+  .side h2 { margin: 0 1rem .4rem; font-size: 11px; letter-spacing: .14em; font-weight: 600; color: var(--muted); }
+  .side .folder { padding: .1rem 1rem; color: var(--fg); font-weight: 600; font-size: 12px; }
+  .side ul { list-style: none; margin: 0 0 1rem; padding: 0; }
+  .side li a, .side li span { display: flex; align-items: center; gap: .55rem; padding: .18rem 1rem .18rem 1.8rem; color: var(--muted); border-left: 2px solid transparent; }
+  .side li a:hover { color: var(--fg); background: var(--bg-hover); }
+  .side li a.on { color: var(--fg); background: rgba(242, 140, 56, .1); border-left-color: var(--orange); }
+  .side li { opacity: 0; animation: fadeIn .4s ease both; animation-delay: calc(var(--i) * 60ms + .45s); }
+  .side li.locked span { opacity: .55; cursor: not-allowed; }
+  .ico { width: 1.6rem; flex: none; font-size: 10px; font-weight: 700; text-align: center; font-style: normal; }
+  .ico.md { color: var(--blue); } .ico.py { color: var(--yellow); } .ico.log { color: var(--green); }
+  .ico.json { color: var(--orange); } .ico.toml { color: var(--pink); } .ico.yml { color: var(--aqua); } .ico.sh { color: var(--red); }
+  .side .outline { margin: 0 1rem; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .side .outline b { color: var(--fg); font-weight: 500; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- editor ---------- */
+  .main { grid-area: main; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .tabs { display: flex; background: var(--bg-side); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; flex: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { display: flex; align-items: center; gap: .3rem; padding: .5rem 1rem .5rem .6rem; font-size: 12.5px; color: var(--muted); border-right: 1px solid var(--border); white-space: nowrap; border-top: 2px solid transparent; }
+  .tabs a:hover { color: var(--fg); }
+  .tabs a.on { background: var(--bg); color: var(--fg); border-top-color: var(--orange); }
+  .scroll { flex: 1; overflow-y: auto; scroll-behavior: smooth; padding-bottom: 30vh; }
+  .scroll::-webkit-scrollbar { width: 10px; }
+  .scroll::-webkit-scrollbar-thumb { background: #2f2c26; border-radius: 10px; border: 2px solid var(--bg); }
+
+  .buf { padding-top: .25rem; }
+  .crumb { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: .1rem; padding: .35rem 1rem; font-size: 12px; color: var(--muted); background: rgba(27, 26, 23, .92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border); }
+  .crumb b { color: var(--fg); font-weight: 500; }
+  .lens { padding: .55rem 0 0 calc(var(--gut) + 1rem); font-size: 11.5px; color: var(--muted); font-style: italic; }
+  .lens b { color: var(--aqua); font-style: normal; font-weight: 500; }
+
+  .code { counter-reset: ln; padding: .5rem 0 1.5rem; }
+  .l {
+    position: relative; counter-increment: ln; min-height: 1.75em;
+    padding: 0 1.25rem 0 calc(var(--gut) + 1rem + var(--ind, 0) * 1ch);
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .l::before { content: counter(ln); position: absolute; left: 0; width: var(--gut); text-align: right; color: var(--ln); font-size: 12.5px; padding-top: .1em; }
+  .l:hover { background: var(--bg-hover); }
+  .l:hover::before { color: var(--muted); }
+  .i1 { --ind: 4; } .i2 { --ind: 8; } .i3 { --ind: 12; } .i9 { --ind: 9; } .i18 { --ind: 18; }
+
+  /* syntax */
+  .k { color: var(--red); font-style: italic; }
+  .s { color: var(--green); }
+  .c { color: var(--muted); font-style: italic; }
+  .f { color: var(--aqua); }
+  .t { color: var(--yellow); }
+  .n { color: var(--pink); }
+  .v { color: var(--blue); }
+  .o { color: var(--orange); }
+  .s a, .v a, a.s, a.v { border-bottom: 1px dashed currentColor; }
+  .s a:hover, .v a:hover, a.s:hover, a.v:hover { background: rgba(182, 199, 92, .14); border-bottom-style: solid; }
+
+  /* README live-preview */
+  .h1 { white-space: nowrap; font-size: clamp(1.75rem, 5.2vw, 3.4rem); line-height: 1.2; font-weight: 700; min-height: 1.2em; padding-top: .3rem; padding-bottom: .2rem; letter-spacing: -.01em; }
+  .h1::before { font-size: 12.5px; padding-top: 1.1em; }
+  .h1 .c { font-weight: 400; color: var(--orange); font-style: normal; }
+  .type { display: inline-block; vertical-align: bottom; overflow: hidden; white-space: nowrap; width: 16ch; border-right: .08em solid var(--orange); animation: typing 1.1s steps(16) .7s both, caret 1s steps(1) 1.8s infinite; }
+  @keyframes typing { from { width: 0; } }
+  @keyframes caret { 50% { border-color: transparent; } }
+  .quote { color: var(--fg); font-style: italic; }
+  .quote .o { font-style: normal; }
+  .bold { color: var(--yellow); font-weight: 700; }
+  .rd { opacity: 0; animation: rd .5s ease both; animation-delay: calc(var(--d) * 70ms + 1.6s); }
+  @keyframes rd { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .btnlink { display: inline-block; padding: 0 .45rem; border: 1px solid var(--border); border-radius: 4px; color: var(--fg); transition: border-color .2s, background .2s, color .2s; }
+  .btnlink:hover { border-color: var(--orange); color: var(--orange); background: rgba(242, 140, 56, .08); }
+
+  /* career.log */
+  .ts { color: var(--muted); }
+  .ev { display: inline-block; min-width: 6ch; font-weight: 700; font-size: .85em; }
+  .ev.start { color: var(--green); } .ev.end { color: var(--red); } .ev.award { color: var(--yellow); } .ev.event { color: var(--blue); } .ev.eta { color: var(--pink); }
+  .tree { color: var(--ln); }
+
+  /* ghost suggestion */
+  .ghost { color: var(--muted); opacity: .55; font-style: italic; text-align: left; transition: opacity .2s; }
+  .ghost:hover { opacity: .9; }
+  .ghost kbd { font: inherit; font-size: 11px; font-style: normal; border: 1px solid var(--ln); border-radius: 3px; padding: 0 .35rem; margin-left: .75rem; }
+  .accepted { color: var(--fg); opacity: 1; font-style: normal; }
+  .out { color: var(--aqua); }
+
+  /* ---------- status bar ---------- */
+  .status { grid-area: status; display: flex; align-items: center; gap: 0; background: var(--orange); color: #1b1a17; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .status > * { padding: .25rem .75rem; }
+  .status .sp { flex: 1; padding: 0; }
+  .status .tk { background: rgba(0, 0, 0, .14); display: flex; gap: .4rem; align-items: center; }
+  .status .tk:hover { background: rgba(0, 0, 0, .25); }
+
+  /* ---------- Timekeeper break overlay ---------- */
+  .brk { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 1.5rem; background: rgba(15, 14, 12, .55); backdrop-filter: blur(18px) saturate(.8); -webkit-backdrop-filter: blur(18px) saturate(.8); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .4s, visibility 0s .4s; }
+  .brk.show { opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
+  .brk-card { text-align: center; max-width: 28rem; }
+  .brk-card .robot { font-size: 12px; color: var(--orange); letter-spacing: .2em; }
+  .brk-card h3 { font-size: clamp(1.8rem, 5vw, 2.6rem); margin: .4rem 0; font-style: italic; }
+  .brk-card p { color: var(--muted); margin: 0 0 1.4rem; }
+  .bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: .6rem; }
+  .bar i { display: block; height: 100%; width: 100%; background: var(--orange); transform-origin: left; }
+  .brk.show .bar i { animation: drain 10s linear forwards; }
+  @keyframes drain { to { transform: scaleX(0); } }
+  .brk-count { font-size: 2rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .brk-actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+  .brk-actions button { border: 1px solid var(--border); border-radius: 6px; padding: .35rem .9rem; font-size: 13px; }
+  .brk-actions button:hover { border-color: var(--orange); color: var(--orange); }
+  .brk-actions button.primary { background: var(--orange); color: #1b1a17; border-color: var(--orange); font-weight: 700; }
+
+  /* ---------- small screens: drop the explorer, keep the editor ---------- */
+  @media (max-width: 860px) {
+    body { padding: 0; font-size: 13px; }
+    .win { height: 100vh; height: 100dvh; border-radius: 0; border: 0; grid-template-columns: 1fr; grid-template-areas: "title" "main" "status"; }
+    .side { display: none; }
+    :root { --gut: 2.1rem; }
+    .l { padding-right: .9rem; padding-left: calc(var(--gut) + .7rem + var(--ind, 0) * 1ch); }
+    .i9 { --ind: 2; } .i18 { --ind: 4; }
+    .lens { padding-left: calc(var(--gut) + .7rem); }
+    .l::before { font-size: 11px; }
+    .hide-sm { display: none; }
+    .h1 { font-size: min(1.75rem, calc((100vw - 4rem) / 13)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rd, .side li { opacity: 1; }
+    .scroll { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="win">
+
+  <div class="title">
+    <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="t"><b>ramses</b> — ~/portfolio</div>
+    <div class="hide-sm" aria-hidden="true">⌥ es · en · it</div>
+  </div>
+
+  <nav class="side" aria-label="Files">
+    <h2>EXPLORER</h2>
+    <div class="folder">▾ PORTFOLIO</div>
+    <ul>
+      <li style="--i:0"><a href="#readme" data-f="readme"><i class="ico md">M↓</i>README.md</a></li>
+      <li style="--i:1"><a href="#ramses" data-f="ramses"><i class="ico py">py</i>ramses.py</a></li>
+      <li style="--i:2"><a href="#career" data-f="career"><i class="ico log">≡</i>career.log</a></li>
+      <li style="--i:3"><a href="#projects" data-f="projects"><i class="ico json">{}</i>projects.json</a></li>
+      <li style="--i:4"><a href="#stack" data-f="stack"><i class="ico toml">⚙</i>stack.toml</a></li>
+      <li style="--i:5"><a href="#education" data-f="education"><i class="ico yml">yml</i>education.yml</a></li>
+      <li style="--i:6"><a href="#contact" data-f="contact"><i class="ico sh">$</i>contact.sh</a></li>
+      <li style="--i:7" class="locked"><span title="nice try"><i class="ico">▸</i>.secrets</span></li>
+      <li style="--i:8" class="locked"><span title="no."><i class="ico">▸</i>node_modules</span></li>
+    </ul>
+    <h2>OUTLINE</h2>
+    <div class="outline">
+      <b>Madrid</b>, ES<br>
+      2.5 yrs @ Celonis<br>
+      20+ enterprise deployments<br>
+      2 awards, 1 degree (+1 loading…)<br>
+      0 demos left as demos
+    </div>
+  </nav>
+
+  <div class="main">
+    <nav class="tabs" aria-label="Open files">
+      <a href="#readme" data-f="readme" class="on"><i class="ico md">M↓</i>README.md</a>
+      <a href="#ramses" data-f="ramses"><i class="ico py">py</i>ramses.py</a>
+      <a href="#career" data-f="career"><i class="ico log">≡</i>career.log</a>
+      <a href="#projects" data-f="projects"><i class="ico json">{}</i>projects.json</a>
+      <a href="#stack" data-f="stack"><i class="ico toml">⚙</i>stack.toml</a>
+      <a href="#education" data-f="education"><i class="ico yml">yml</i>education.yml</a>
+      <a href="#contact" data-f="contact"><i class="ico sh">$</i>contact.sh</a>
+    </nav>
+
+    <main class="scroll" id="scroll" tabindex="0" aria-label="Portfolio">
+
+      <!-- README.md -->
+      <section class="buf" id="readme" data-lang="Markdown">
+        <div class="crumb">portfolio › <b>README.md</b></div>
+        <div class="code">
+          <h1 class="l h1"><span class="c"># </span><span class="type">Ramses Contreras</span></h1>
+          <div class="l rd" style="--d:1"><span class="quote"><span class="o">&gt;</span> AI engineer in Madrid. I build AI things that actually leave the demo stage.</span></div>
+          <div class="l rd" style="--d:2"></div>
+          <div class="l rd" style="--d:3">Spent 2.5 years at <span class="bold">**Celonis**</span> shipping RAG assistants, predictive models and FastAPI services for Fortune 500 clients, across 20+ enterprise deployments in EMEA and North America. Won <span class="bold">**Innovation of the Quarter**</span> for one of them.</div>
+          <div class="l rd" style="--d:4"></div>
+          <div class="l rd" style="--d:5">Now finishing a CS degree (AI track) at UC3M. I already have one in Business, so I can talk to the customers <span class="quote">*and*</span> the code. Lately obsessed with <span class="bold">**voice agents**</span>: tools, guardrails, telephony, the whole thing.</div>
+          <div class="l rd" style="--d:6"></div>
+          <div class="l rd" style="--d:7"><span class="o">-</span> currently: building a phone triage agent for Spain's public health system (thesis)</div>
+          <div class="l rd" style="--d:8"><span class="o">-</span> looking for: applied AI / forward-deployed engineering roles</div>
+          <div class="l rd" style="--d:9"></div>
+          <div class="l rd" style="--d:10"><a class="btnlink" href="mailto:ramses.contreras7@gmail.com">[email]</a> <a class="btnlink" href="https://github.com/ramsescs">[github]</a> <a class="btnlink" href="https://www.linkedin.com/in/ramses-contreras-sulbaran">[linkedin]</a></div>
+        </div>
+      </section>
+
+      <!-- ramses.py -->
+      <section class="buf" id="ramses" data-lang="Python">
+        <div class="crumb">portfolio › <b>ramses.py</b></div>
+        <div class="code">
+          <div class="l"><span class="k">from</span> madrid <span class="k">import</span> café_con_leche</div>
+          <div class="l"><span class="k">from</span> celonis <span class="k">import</span> experience  <span class="c"># 2.5 yrs, Fortune 500 clients</span></div>
+          <div class="l"></div>
+          <div class="l"></div>
+          <div class="l"><span class="k">class</span> <span class="t">Ramses</span>(<span class="t">Engineer</span>):</div>
+          <div class="l i1"><span class="s">"""Talks to the customers *and* the code."""</span></div>
+          <div class="l"></div>
+          <div class="l i1"><span class="v">based_in</span> <span class="o">=</span> <span class="s">"Madrid, ES"</span></div>
+          <div class="l i1"><span class="v">speaks</span> <span class="o">=</span> {<span class="s">"es"</span>: <span class="s">"native"</span>, <span class="s">"en"</span>: <span class="s">"native"</span>, <span class="s">"it"</span>: <span class="s">"C1"</span>}</div>
+          <div class="l i1"><span class="v">degrees</span> <span class="o">=</span> [<span class="s">"Business Administration"</span>, <span class="s">"Computer Science (AI)"</span>]</div>
+          <div class="l i1"><span class="v">obsessed_with</span> <span class="o">=</span> [<span class="s">"voice agents"</span>, <span class="s">"guardrails"</span>, <span class="s">"telephony"</span>]</div>
+          <div class="l"></div>
+          <div class="l i1"><span class="k">def</span> <span class="f">work</span>(<span class="k">self</span>, problem):</div>
+          <div class="l i2">mvp <span class="o">=</span> <span class="k">self</span>.<span class="f">discover</span>(problem).<span class="f">prototype</span>()</div>
+          <div class="l i2"><span class="k">return</span> mvp.<span class="f">ship</span>(to<span class="o">=</span><span class="s">"production"</span>)  <span class="c"># not just a demo</span></div>
+          <div class="l"></div>
+          <div class="l i1"><span class="k">def</span> <span class="f">take_break</span>(<span class="k">self</span>):</div>
+          <div class="l i2"><span class="k">raise</span> <span class="t">NotImplementedError</span>(<span class="s">"delegated to Timekeeper.app"</span>)</div>
+          <div class="l"></div>
+          <div class="l"></div>
+          <div class="l"><button class="ghost" id="ghost" type="button" aria-label="Accept suggestion: Ramses().say_hi()">Ramses().say_hi()<kbd>⇥ accept</kbd></button></div>
+          <div class="l out" id="out" hidden></div>
+        </div>
+      </section>
+
+      <!-- career.log -->
+      <section class="buf" id="career" data-lang="Log">
+        <div class="crumb">portfolio › <b>career.log</b></div>
+        <div class="lens">▸ event log · case_id=<b>ramses</b> · 10 events · 0 rework loops · throughput time: <b>ongoing</b></div>
+        <div class="code">
+          <div class="l"><span class="c"># one case, mined like a process. newest at the bottom, like a real log.</span></div>
+          <div class="l"></div>
+          <div class="l"><span class="ts">2021-01</span>  <span class="ev start">START</span> <b>Strategic Consultant Intern</b> @ 180 Degrees Consulting, Madrid</div>
+          <div class="l i9"><span class="tree">└─</span> e-learning platform + Google Ads revenue stream for a Nigerian NGO</div>
+          <div class="l"><span class="ts">2021-05</span>  <span class="ev award">AWARD</span> Best Project of the Cycle</div>
+          <div class="l"><span class="ts">2023-07</span>  <span class="ev start">START</span> <b>Data Scientist, Internal AI &amp; Automation</b> @ Celonis</div>
+          <div class="l i9"><span class="tree">├─</span> shipped a RAG search assistant on Azure: customer stories in seconds, not hours</div>
+          <div class="l i9"><span class="tree">├─</span> rebuilt the object-centric process mining demo generator: <span class="n">-2h</span> per demo</div>
+          <div class="l i9"><span class="tree">└─</span> customer-facing app + custom FastAPI endpoints to monitor automation flows</div>
+          <div class="l"><span class="ts">2024-07</span>  <span class="ev eta">GRAD</span>  B.Sc. Business Administration, UC3M · <span class="n">8.63/10</span>, top 5%</div>
+          <div class="l"><span class="ts">2024-09</span>  <span class="ev start">START</span> <b>Associate Process Intelligence Consultant</b> @ Celonis</div>
+          <div class="l i9"><span class="tree">├─</span> predictive shipment planner + restocking optimizer: <span class="n">3</span> warehouses, <span class="n">1M+</span> shipments</div>
+          <div class="l i9"><span class="tree">│  └─</span> <span class="ev award">AWARD</span> 🏆 Celonis Innovation of the Quarter</div>
+          <div class="l i9"><span class="tree">├─</span> migration tool → product: <span class="n">~10</span> pilots, company-wide rollout, weeks → <span class="n">~3 days</span></div>
+          <div class="l i9"><span class="tree">├─</span> end-to-end implementations for enterprise clients across EMEA + NAM</div>
+          <div class="l i9"><span class="tree">└─</span> AI enablement programs for <span class="n">30+</span> customers and partners</div>
+          <div class="l"><span class="ts">2025-10</span>  <span class="ev end">END</span>   Celonis · 2.5 yrs · 20+ enterprise deployments</div>
+          <div class="l"><span class="ts">2026-04</span>  <span class="ev event">EVENT</span> Hackathon: autonomous voice agent for logistics + observability dashboard</div>
+          <div class="l"><span class="ts">2026-05</span>  <span class="ev start">START</span> <b>CS thesis</b>: voice triage agent for Spain's public health system</div>
+          <div class="l"><span class="ts">2026-12</span>  <span class="ev eta">ETA</span>   B.Sc. Computer Science (AI), UC3M</div>
+          <div class="l"><span class="ts">20XX-XX</span>  <span class="ev start">START</span> <span class="c">your team? → contact.sh</span></div>
+        </div>
+      </section>
+
+      <!-- projects.json -->
+      <section class="buf" id="projects" data-lang="JSON">
+        <div class="crumb">portfolio › <b>projects.json</b></div>
+        <div class="code">
+          <div class="l">[</div>
+          <div class="l i1">{</div>
+          <div class="l i2"><span class="v">"name"</span>: <a class="s" href="https://github.com/ramsescs/sns-voice-agent-elevenlabs">"sns-voice-agent"</a>,</div>
+          <div class="l i2"><span class="v">"status"</span>: <span class="s">"thesis, in progress"</span>,</div>
+          <div class="l i2"><span class="v">"what"</span>: <span class="s">"phone triage agent for Spain's public health system"</span>,</div>
+          <div class="l i2"><span class="v">"the_point"</span>: <span class="s">"SET acuity is assigned in code, not by the LLM. Guardrails stop the agent from overriding an escalation."</span>,</div>
+          <div class="l i2"><span class="v">"for_everyone"</span>: <span class="s">"Spain's co-official languages + a slower, simpler mode for older callers"</span>,</div>
+          <div class="l i2"><span class="v">"stack"</span>: [<span class="s">"ElevenLabs Agents"</span>, <span class="s">"Python"</span>, <span class="s">"FastAPI"</span>]</div>
+          <div class="l i1">},</div>
+          <div class="l i1">{</div>
+          <div class="l i2"><span class="v">"name"</span>: <span class="s">"voice-agent-for-logistics"</span>,</div>
+          <div class="l i2"><span class="v">"status"</span>: <span class="s">"hackathon, apr 2026"</span>,</div>
+          <div class="l i2"><span class="v">"what"</span>: <span class="s">"multi-step autonomous voice agent with custom tools"</span>,</div>
+          <div class="l i2"><span class="v">"the_point"</span>: <span class="s">"a React/TS dashboard so operators can trace the agent's reasoning in real time"</span>,</div>
+          <div class="l i2"><span class="v">"stack"</span>: [<span class="s">"Claude Code"</span>, <span class="s">"FastAPI"</span>, <span class="s">"HappyRobot"</span>, <span class="s">"React"</span>, <span class="s">"TypeScript"</span>]</div>
+          <div class="l i1">},</div>
+          <div class="l i1">{</div>
+          <div class="l i2"><span class="v">"name"</span>: <a class="s" href="https://github.com/ramsescs/Timekeeper">"Timekeeper"</a>,</div>
+          <div class="l i2"><span class="v">"what"</span>: <span class="s">"macOS menu bar app: tracks time per activity, blurs every screen when a break is due"</span>,</div>
+          <div class="l i2"><span class="v">"try_it"</span>: <span class="s">"click the ⏱ in the status bar below"</span>,</div>
+          <div class="l i2"><span class="v">"stack"</span>: [<span class="s">"Swift"</span>, <span class="s">"macOS"</span>]</div>
+          <div class="l i1">},</div>
+          <div class="l i1">{</div>
+          <div class="l i2"><span class="v">"name"</span>: <a class="s" href="https://github.com/ramsescs/job-search-agent">"job-search-agent"</a>,</div>
+          <div class="l i2"><span class="v">"what"</span>: <span class="s">"extended fork of career-ops: Claude Code running (most of) my job hunt"</span>,</div>
+          <div class="l i2"><span class="v">"stack"</span>: [<span class="s">"Claude Code"</span>, <span class="s">"JavaScript"</span>]</div>
+          <div class="l i1">}</div>
+          <div class="l">]</div>
+        </div>
+      </section>
+
+      <!-- stack.toml -->
+      <section class="buf" id="stack" data-lang="TOML">
+        <div class="crumb">portfolio › <b>stack.toml</b></div>
+        <div class="code">
+          <div class="l"><span class="t">[ai]</span></div>
+          <div class="l"><span class="v">llm_apis</span> <span class="o">=</span> [<span class="s">"Anthropic"</span>, <span class="s">"OpenAI"</span>, <span class="s">"Gemini"</span>]</div>
+          <div class="l"><span class="v">rag</span>      <span class="o">=</span> [<span class="s">"embeddings"</span>, <span class="s">"vector DBs (Chroma)"</span>]</div>
+          <div class="l"><span class="v">agents</span>   <span class="o">=</span> [<span class="s">"tool use"</span>, <span class="s">"guardrails"</span>, <span class="s">"observability"</span>, <span class="s">"ElevenLabs"</span>, <span class="s">"Claude Code"</span>]</div>
+          <div class="l"></div>
+          <div class="l"><span class="t">[code]</span></div>
+          <div class="l"><span class="v">python</span>   <span class="o">=</span> [<span class="s">"Pandas"</span>, <span class="s">"NumPy"</span>, <span class="s">"scikit-learn"</span>, <span class="s">"FastAPI"</span>]</div>
+          <div class="l"><span class="v">web</span>      <span class="o">=</span> [<span class="s">"React"</span>, <span class="s">"TypeScript"</span>]</div>
+          <div class="l"><span class="v">also</span>     <span class="o">=</span> [<span class="s">"Java"</span>, <span class="s">"SQL (Vertica, PostgreSQL)"</span>, <span class="s">"Swift"</span>]</div>
+          <div class="l"></div>
+          <div class="l"><span class="t">[ops]</span></div>
+          <div class="l"><span class="v">cloud</span>    <span class="o">=</span> <span class="s">"Azure"</span></div>
+          <div class="l"><span class="v">tools</span>    <span class="o">=</span> [<span class="s">"Docker"</span>, <span class="s">"Git"</span>, <span class="s">"GitHub Actions"</span>]</div>
+          <div class="l"></div>
+          <div class="l"><span class="t">[product]</span>  <span class="c"># the part most engineers skip</span></div>
+          <div class="l"><span class="v">skills</span>   <span class="o">=</span> [<span class="s">"customer discovery"</span>, <span class="s">"MVP definition"</span>, <span class="s">"user flows"</span>, <span class="s">"accessibility"</span>, <span class="s">"BPMN"</span>]</div>
+        </div>
+      </section>
+
+      <!-- education.yml -->
+      <section class="buf" id="education" data-lang="YAML">
+        <div class="crumb">portfolio › <b>education.yml</b></div>
+        <div class="code">
+          <div class="l"><span class="v">uc3m</span>:</div>
+          <div class="l i1"><span class="o">-</span> <span class="v">degree</span>: <span class="s">B.Sc. Computer Science, AI specialization</span></div>
+          <div class="l i1">  <span class="v">status</span>: <span class="s">expected Dec 2026</span></div>
+          <div class="l i1"><span class="o">-</span> <span class="v">degree</span>: <span class="s">B.Sc. Business Administration</span></div>
+          <div class="l i1">  <span class="v">grade</span>: <span class="n">8.63/10</span>  <span class="c"># top 5%</span></div>
+          <div class="l"><span class="v">visiting</span>:</div>
+          <div class="l i1"><span class="o">-</span> <span class="s">University of Southern California</span>  <span class="c"># GPA 3.79/4</span></div>
+          <div class="l i1"><span class="o">-</span> <span class="s">Università Bocconi</span>                <span class="c"># 27/30</span></div>
+          <div class="l i1"><span class="o">-</span> <span class="s">UC Santa Cruz</span>                     <span class="c"># GPA 3.83/4</span></div>
+          <div class="l"><span class="v">honors</span>:</div>
+          <div class="l i1"><span class="o">-</span> <span class="s">Beca Excelencia, Comunidad de Madrid (x3)</span></div>
+          <div class="l"><span class="v">side_quests</span>:</div>
+          <div class="l i1"><span class="v">celoclub</span>: <span class="s">7-person committee, 40+ events, €72K budget, two 300-person parties, two ski trips</span></div>
+        </div>
+      </section>
+
+      <!-- contact.sh -->
+      <section class="buf" id="contact" data-lang="Shell">
+        <div class="crumb">portfolio › <b>contact.sh</b></div>
+        <div class="code">
+          <div class="l"><span class="c">#!/usr/bin/env bash</span></div>
+          <div class="l"><span class="c"># fastest way to reach me. replies in es · en · it</span></div>
+          <div class="l"></div>
+          <div class="l"><span class="f">open</span> <a class="s" href="mailto:ramses.contreras7@gmail.com">"mailto:ramses.contreras7@gmail.com"</a></div>
+          <div class="l"><span class="f">open</span> <a class="s" href="https://github.com/ramsescs">"https://github.com/ramsescs"</a></div>
+          <div class="l"><span class="f">open</span> <a class="s" href="https://www.linkedin.com/in/ramses-contreras-sulbaran">"https://linkedin.com/in/ramses-contreras-sulbaran"</a></div>
+          <div class="l"></div>
+          <div class="l"><span class="f">echo</span> <span class="s">"thanks for reading the source 👋"</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="status">
+    <span>⎇ main</span>
+    <span class="hide-sm">✓ 0 problems</span>
+    <span class="sp"></span>
+    <span class="hide-sm" id="pos">Ln 1, Col 1</span>
+    <span id="lang">Markdown</span>
+    <span class="hide-sm" id="clock">Madrid --:--</span>
+    <button class="tk" id="tk" type="button" title="Timekeeper: click to preview a break"><span aria-hidden="true">⏱</span><span id="tkt">50:00</span></button>
+  </footer>
+</div>
+
+<div class="brk" id="brk" role="dialog" aria-modal="true" aria-labelledby="brk-h" aria-hidden="true">
+  <div class="brk-card">
+    <div class="robot">TIMEKEEPER</div>
+    <h3 id="brk-h">Time for a break.</h3>
+    <p>Stand up, drink some water, look at something six meters away. The portfolio will still be here.</p>
+    <div class="bar"><i></i></div>
+    <div class="brk-count" id="brk-count">0:10</div>
+    <div class="brk-actions">
+      <button type="button" id="snooze">Snooze 5 min</button>
+      <button type="button" class="primary" id="back">Back to work</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const scroller = $('#scroll');
+  const links = $$('[data-f]');
+  const bufs = $$('.buf');
+
+  // keep tabs + explorer in sync with whatever file is on screen
+  const setActive = (id) => {
+    links.forEach(a => a.classList.toggle('on', a.dataset.f === id));
+    const b = document.getElementById(id);
+    $('#lang').textContent = b.dataset.lang;
+    const tab = $(`.tabs [data-f="${id}"]`);
+    tab && tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+  }, { root: scroller, rootMargin: '0px 0px -75% 0px' });
+  bufs.forEach(b => io.observe(b));
+
+  // Ln / Col follows the mouse
+  scroller.addEventListener('mouseover', (e) => {
+    const l = e.target.closest('.l');
+    if (!l) return;
+    const lines = $$('.l', l.closest('.code'));
+    $('#pos').textContent = `Ln ${lines.indexOf(l) + 1}, Col ${1 + (parseInt(getComputedStyle(l).getPropertyValue('--ind')) || 0)}`;
+  });
+
+  // ghost-text suggestion
+  $('#ghost').addEventListener('click', (e) => {
+    const g = e.currentTarget;
+    g.outerHTML = '<span class="accepted"><span class="t">Ramses</span>().<span class="f">say_hi</span>()</span>';
+    const out = $('#out');
+    out.hidden = false;
+    out.innerHTML = '<span class="c">&gt;&gt;&gt;</span> \'¡Hola! Write me at <a class="s" href="mailto:ramses.contreras7@gmail.com">ramses.contreras7@gmail.com</a>\'';
+  }, { once: true });
+
+  // Madrid clock
+  const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit' });
+  const tick = () => { $('#clock').textContent = 'Madrid ' + fmt.format(new Date()); };
+  tick(); setInterval(tick, 15000);
+
+  // Timekeeper: a 50 min work block, like the real app
+  const brk = $('#brk');
+  let blockEnd = Date.now() + 50 * 60 * 1000, brkTimer = null;
+  const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+  const openBreak = () => {
+    if (brk.classList.contains('show')) return;
+    brk.classList.add('show'); brk.setAttribute('aria-hidden', 'false');
+    const end = Date.now() + 10000;
+    $('#brk-count').textContent = mmss(10000);
+    brkTimer = setInterval(() => {
+      const left = end - Date.now();
+      $('#brk-count').textContent = left > 0 ? mmss(left) : 'done ✓';
+      if (left <= 0) clearInterval(brkTimer);
+    }, 250);
+    $('#back').focus();
+  };
+  const closeBreak = (snoozeMin) => {
+    clearInterval(brkTimer);
+    brk.classList.remove('show'); brk.setAttribute('aria-hidden', 'true');
+    blockEnd = Date.now() + (snoozeMin || 50) * 60 * 1000;
+    $('#tk').focus();
+  };
+  setInterval(() => {
+    const left = blockEnd - Date.now();
+    $('#tkt').textContent = mmss(left);
+    if (left <= 0) openBreak();
+  }, 1000);
+  $('#tk').addEventListener('click', openBreak);
+  $('#back').addEventListener('click', () => closeBreak());
+  $('#snooze').addEventListener('click', () => closeBreak(5));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && brk.classList.contains('show')) closeBreak(); });
+})();
+</script>
+</body>
+</html>
