@@ -110,6 +110,8 @@
   .tile { border-top: 2px solid var(--accent); padding-top: .75rem; }
   .tile b { display: block; font-family: var(--code); font-weight: 700; font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.1; letter-spacing: -.02em; }
   .tile span { display: block; margin-top: .4rem; font-size: .9rem; line-height: 1.4; color: var(--muted); }
+  .tile span span { display: inline; margin: 0; }
+  .tile .xs-only { display: none; }
 
   /* ---------- conversation ---------- */
   .convo { display: grid; grid-template-columns: minmax(0, 48rem) 17rem; justify-content: space-between; gap: 3rem; align-items: start; padding-bottom: 5rem; }
@@ -214,6 +216,7 @@
     body { font-size: 16px; }
     .wrap { padding: 0 1rem; }
     .callbar .who, .callbar .lat, .xs-hide { display: none; }
+    .tile .xs-hide { display: none; } .tile .xs-only { display: inline; }
     .callbar .wrap { gap: .75rem; }
     .summary { padding: 1rem; border-radius: 14px; }
     .tiles { grid-template-columns: 1fr 1fr; gap: 1.25rem 1rem; }
@@ -270,7 +273,7 @@
     <div class="tiles">
       <div class="tile"><b>Biz + CS</b><span>two degrees, so he can talk to the customers <em>and</em> the code</span></div>
       <div class="tile"><b>Award-Winning AI </b><span>shipped a prediction and shipment planning tool for a Fortune 500 company, that won Innovation of the Quarter 🏆</span></div>
-      <div class="tile"><b>20+</b><span>accounts worked with in multiple industries across EMEA and NAM — from AI deployments to process mining solutions</span></div>
+      <div class="tile"><b>20+</b><span><span class="xs-hide">accounts worked with in multiple industries across EMEA and NAM — from AI deployments to process mining solutions</span><span class="xs-only">accounts worked with across diverse industries both in EMEA and NAM: AI deployments and process mining solutions</span></span></div>
       <div class="tile"><b>RAG</b><span>a Really Awesome Guy, but yes also experienced in RAG systems, AI agents and classical ML</span></div>
     </div>
   </section>
@@ -469,7 +472,7 @@
 </main>
 
 <footer>
-  <div class="wrap"><span>ramsescs.github.io · this call may be recorded for portfolio purposes</span><span>built in Madrid</span></div>
+  <div class="wrap"><span>ramsescs.github.io · this call may be recorded for improvement purposes</span><span>built in Madrid</span></div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
