@@ -210,7 +210,8 @@
   @media (max-width: 960px) {
     .hero { padding-top: 3rem; }
     .convo { grid-template-columns: 1fr; }
-    .rail { display: none; }
+    .rail { position: static; order: -1; margin-bottom: 3rem; }
+    .rail .panel-guard { display: none; }
   }
   @media (max-width: 600px) {
     body { font-size: 16px; }
@@ -459,7 +460,7 @@
           <button type="button" data-k="#"><b>#</b><small>top</small></button>
         </div>
       </div>
-      <div class="panel">
+      <div class="panel panel-guard">
         <h3><span>Guardrails</span><span>3 active</span></h3>
         <ul class="guard">
           <li>never call a demo “production”</li>
