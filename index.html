@@ -256,11 +256,12 @@
       </h1>
       <p class="tagline">AI engineer who builds things that <b>actually leave the demo stage</b>. 2.5 years shipping for Fortune 500 clients at Celonis; now building voice agents.</p>
       <nav class="ivr" aria-label="Menu">
-        <a href="#t-1"><b>1</b>experience</a>
-        <a href="#t-2"><b>2</b>projects</a>
-        <a href="#t-3"><b>3</b>stack</a>
-        <a href="#t-4"><b>4</b>education</a>
-        <a href="#t-5"><b>5</b>off the record</a>
+        <a href="#t-1"><b>1</b>intro</a>
+        <a href="#t-2"><b>2</b>experience</a>
+        <a href="#t-3"><b>3</b>projects</a>
+        <a href="#t-4"><b>4</b>stack</a>
+        <a href="#t-5"><b>5</b>education</a>
+        <a href="#t-6"><b>6</b>off the record</a>
         <a href="#t-0" class="zero"><b>0</b>talk to the human</a>
       </nav>
     </div>
@@ -282,7 +283,7 @@
   <div class="convo">
     <div class="transcript">
 
-      <section class="turn reveal" id="t-intro">
+      <section class="turn reveal" id="t-1">
         <div class="caller"><h2 data-key="caller">Hi! Who am I talking to?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">lookup_profile(name="ramses")</span><span class="ok">✓ 200</span><span>118ms</span></div>
         <div class="agent">
@@ -294,8 +295,8 @@
         </div>
       </section>
 
-      <section class="turn reveal" id="t-1">
-        <div class="caller"><h2 data-key="pressed 1">What has he actually shipped?</h2></div>
+      <section class="turn reveal" id="t-2">
+        <div class="caller"><h2 data-key="pressed 2">What has he actually shipped?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">get_experience(sort="recent")</span><span class="ok">✓ 3 records</span><span>184ms</span></div>
         <div class="agent"><span class="by">ramses-agent</span><p>Mostly things that went to production. Here are the records:</p></div>
         <div class="results">
@@ -336,8 +337,8 @@
         </div>
       </section>
 
-      <section class="turn reveal" id="t-2">
-        <div class="caller"><h2 data-key="pressed 2">What's he building right now?</h2></div>
+      <section class="turn reveal" id="t-3">
+        <div class="caller"><h2 data-key="pressed 3">What's he building right now?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">list_projects(limit=5)</span><span class="ok">✓ 5 results</span><span>96ms</span></div>
         <div class="agent"><span class="by">ramses-agent</span><p>Mostly voice agents, one hackathon-winning travel agent, and one app that's very serious about breaks.</p></div>
         <div class="results">
@@ -368,8 +369,8 @@
         </div>
       </section>
 
-      <section class="turn reveal" id="t-3">
-        <div class="caller"><h2 data-key="pressed 3">And the stack?</h2></div>
+      <section class="turn reveal" id="t-4">
+        <div class="caller"><h2 data-key="pressed 4">And the stack?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">get_stack()</span><span class="ok">✓ 200</span><span>41ms</span></div>
         <div class="results">
           <article class="card groups">
@@ -382,8 +383,8 @@
         </div>
       </section>
 
-      <section class="turn reveal" id="t-4">
-        <div class="caller"><h2 data-key="pressed 4">Where did he study?</h2></div>
+      <section class="turn reveal" id="t-5">
+        <div class="caller"><h2 data-key="pressed 5">Where did he study?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">get_education()</span><span class="ok">✓ 2 degrees · 3 exchanges</span><span>63ms</span></div>
         <div class="results">
           <article class="card">
@@ -414,8 +415,8 @@
         </div>
       </section>
 
-      <section class="turn reveal" id="t-5">
-        <div class="caller"><h2 data-key="pressed 5">Anything that's not on the CV?</h2></div>
+      <section class="turn reveal" id="t-6">
+        <div class="caller"><h2 data-key="pressed 6">Anything that's not on the CV?</h2></div>
         <div class="tool"><span>⚙</span><span class="fn">get_fun_facts()</span><span class="ok">✓ 200</span><span>12ms</span></div>
         <div class="agent">
           <span class="by">ramses-agent</span>
@@ -446,12 +447,12 @@
       <div class="panel">
         <h3><span>Keypad</span><span id="snd">♪ on</span></h3>
         <div class="pad" id="pad">
-          <button type="button" data-k="1"><b>1</b><small>experience</small></button>
-          <button type="button" data-k="2"><b>2</b><small>projects</small></button>
-          <button type="button" data-k="3"><b>3</b><small>stack</small></button>
-          <button type="button" data-k="4"><b>4</b><small>education</small></button>
-          <button type="button" data-k="5"><b>5</b><small>off record</small></button>
-          <button type="button" data-k="6"><b>6</b><small>&nbsp;</small></button>
+          <button type="button" data-k="1"><b>1</b><small>intro</small></button>
+          <button type="button" data-k="2"><b>2</b><small>experience</small></button>
+          <button type="button" data-k="3"><b>3</b><small>projects</small></button>
+          <button type="button" data-k="4"><b>4</b><small>stack</small></button>
+          <button type="button" data-k="5"><b>5</b><small>education</small></button>
+          <button type="button" data-k="6"><b>6</b><small>off record</small></button>
           <button type="button" data-k="7"><b>7</b><small>&nbsp;</small></button>
           <button type="button" data-k="8"><b>8</b><small>&nbsp;</small></button>
           <button type="button" data-k="9"><b>9</b><small>&nbsp;</small></button>
@@ -523,7 +524,7 @@
     beep(k);
     if (k === '#') return window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     if (document.getElementById('t-' + k)) return go('t-' + k);
-    toast(`Option ${k} is not recognized. Please hold… (just kidding, try 1–5 or 0)`);
+    toast(`Option ${k} is not recognized. Please hold… (just kidding, try 1–6 or 0)`);
   };
 
   $('#pad').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) press(b.dataset.k); });
