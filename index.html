@@ -196,6 +196,9 @@
   .pad button.hit small { color: var(--hi-ink); }
   .pad button.on { border-color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
   .pad .z { color: var(--accent); }
+  .pad-tab { display: none; }
+  .pad-tab .ic-x, .rail.open .pad-tab .ic-pad { display: none; }
+  .rail.open .pad-tab .ic-x { display: block; }
   .guard { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: .72rem; }
   .guard li { display: flex; gap: .5rem; padding: .35rem 0; border-bottom: 1px dashed var(--line); }
   .guard li:last-child { border: 0; }
@@ -210,8 +213,14 @@
   @media (max-width: 960px) {
     .hero { padding-top: 3rem; }
     .convo { grid-template-columns: 1fr; }
-    .rail { position: static; order: -1; margin-bottom: 3rem; }
+    .rail { position: fixed; z-index: 25; top: auto; right: .75rem; bottom: 1.25rem; width: min(19rem, calc(100vw - 5rem)); transform: translateX(calc(100% + 4.5rem)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+    .rail.armed { transform: translateX(calc(100% + .75rem)); }
+    .rail.open { transform: none; }
+    .rail .panel { visibility: hidden; transition: visibility 0s .35s; max-height: calc(100vh - 6rem); overflow-y: auto; box-shadow: 0 18px 50px -12px rgba(0, 0, 0, .45); }
+    .rail.open .panel { visibility: visible; transition-delay: 0s; }
     .rail .panel-guard { display: none; }
+    .pad-tab { display: grid; place-items: center; position: absolute; right: 100%; bottom: 1rem; width: 2.75rem; height: 3.25rem; border: 0; border-radius: 12px 0 0 12px; background: var(--accent); color: var(--accent-ink); box-shadow: -6px 8px 24px -8px rgba(0, 0, 0, .45); visibility: hidden; transition: visibility 0s .35s; }
+    .rail.armed .pad-tab { visibility: visible; transition-delay: 0s; }
   }
   @media (max-width: 600px) {
     body { font-size: 16px; }
@@ -444,7 +453,11 @@
     </div>
 
     <aside class="rail" aria-label="Keypad and guardrails">
-      <div class="panel">
+      <button type="button" class="pad-tab" id="pad-tab" aria-controls="pad-panel" aria-expanded="false" aria-label="Open keypad">
+        <svg class="ic-pad" viewBox="0 0 18 24" width="18" height="24" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="2"/><circle cx="9" cy="3" r="2"/><circle cx="15" cy="3" r="2"/><circle cx="3" cy="9" r="2"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><circle cx="3" cy="15" r="2"/><circle cx="9" cy="15" r="2"/><circle cx="15" cy="15" r="2"/><circle cx="9" cy="21" r="2"/></g></svg>
+        <svg class="ic-x" viewBox="0 0 18 18" width="16" height="16" aria-hidden="true"><path d="M3 3l12 12M15 3L3 15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="panel" id="pad-panel">
         <h3><span>Keypad</span><span id="snd">♪ on</span></h3>
         <div class="pad" id="pad">
           <button type="button" data-k="1"><b>1</b><small>intro</small></button>
@@ -522,13 +535,32 @@
     if (btn) { btn.classList.add('hit'); setTimeout(() => btn.classList.remove('hit'), 140); }
     if (k === '*') { sound = !sound; $('#snd').textContent = sound ? '♪ on' : '♪ off'; toast(sound ? 'Sound on.' : 'Sound off. Very professional.'); return; }
     beep(k);
-    if (k === '#') return window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    if (document.getElementById('t-' + k)) return go('t-' + k);
+    if (k === '#') { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return true; }
+    if (document.getElementById('t-' + k)) { go('t-' + k); return true; }
     toast(`Option ${k} is not recognized. Please hold… (just kidding, try 1–6 or 0)`);
   };
 
-  $('#pad').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) press(b.dataset.k); });
+  // small screens: the keypad is a side drawer, armed once the hero has scrolled away
+  const rail = $('.rail'), tab = $('#pad-tab');
+  const setOpen = (on) => {
+    rail.classList.toggle('open', on);
+    tab.setAttribute('aria-expanded', on);
+    tab.setAttribute('aria-label', on ? 'Close keypad' : 'Open keypad');
+  };
+  new IntersectionObserver(([e]) => {
+    const armed = !e.isIntersecting && e.boundingClientRect.top < 0;
+    rail.classList.toggle('armed', armed);
+    if (!armed) setOpen(false);
+  }, { rootMargin: '-56px 0px 0px 0px' }).observe($('.hero'));
+  tab.addEventListener('click', () => setOpen(!rail.classList.contains('open')));
+  document.addEventListener('click', (e) => { if (rail.classList.contains('open') && !rail.contains(e.target)) setOpen(false); });
+
+  $('#pad').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (b && press(b.dataset.k) && rail.classList.contains('open')) setTimeout(() => setOpen(false), 180);
+  });
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && rail.classList.contains('open')) { setOpen(false); tab.focus(); return; }
     if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
     if (F[e.key]) press(e.key);
   });
